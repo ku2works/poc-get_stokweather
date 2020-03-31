@@ -1,0 +1,53 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  get stokweather
+  version 0.0.1
+
+Globals:
+  Function:
+    Runtime: "python3.8"
+    Timeout: 900
+
+##################################################
+# Parameters
+##################################################
+Parameters:
+  TimeZone:
+    Type: "String"
+    Default: "Asia/Tokyo"
+  StockweatherCode:
+    Type: "String"
+    Default: ""
+  StockweatherKey:
+    Type: "String"
+    Default: ""
+
+Resources:
+
+  ##################################################
+  # Lambda Function
+  ##################################################
+  StokweatherFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      FunctionName: !Sub "Stokweather"
+      Description: "stokweather"
+      CodeUri: "../../src/"
+      Handler: "functions.stokweather.lambda_handler"
+      MemorySize: 128
+      Timeout: 60
+      AutoPublishAlias: "live"
+      Policies:
+        - "AWSLambdaExecute"
+      Environment:
+        Variables:
+          TZ: !Ref TimeZone
+          StockweatherCode: !Ref StockweatherCode
+          StockweatherKey: !Ref StockweatherKey
+      Events:
+        GetResource:
+          Type: Api
+          Properties:
+            Path: /stokweather
+            Method: get

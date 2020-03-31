@@ -1,0 +1,4 @@
+src/vendor/
+deploy/out/output.yml
+bin/
+.idea/
